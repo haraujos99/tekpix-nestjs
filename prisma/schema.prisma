@@ -1,0 +1,64 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model categorias {
+  id       Int        @id @default(autoincrement()) @db.UnsignedInt
+  nome     String     @db.VarChar(63)
+  produtos produtos[]
+}
+
+model clientes {
+  id                 Int      @id @default(autoincrement()) @db.UnsignedInt
+  nome               String   @db.VarChar(63)
+  cpf                String   @db.Char(11)
+  data_de_nascimento DateTime @db.Date
+  vendas             vendas[]
+}
+
+model fornecedores {
+  id       Int        @id @default(autoincrement()) @db.UnsignedInt
+  nome     String     @db.VarChar(63)
+  produtos produtos[]
+}
+
+model funcionarios {
+  id                  Int      @id @default(autoincrement()) @db.UnsignedInt
+  nome                String   @db.VarChar(63)
+  cpf                 String   @db.Char(11)
+  data_de_contratacao DateTime @db.Date
+  vendas              vendas[]
+}
+
+model produtos {
+  id            Int          @id @default(autoincrement()) @db.UnsignedInt
+  nome          String       @db.VarChar(127)
+  categoria_id  Int          @db.UnsignedInt
+  fornecedor_id Int          @db.UnsignedInt
+  preco         Int
+  categorias    categorias   @relation(fields: [categoria_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "produtos_ibfk_1")
+  fornecedores  fornecedores @relation(fields: [fornecedor_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "produtos_ibfk_2")
+  vendas        vendas[]
+
+  @@index([categoria_id], map: "categoria_id")
+  @@index([fornecedor_id], map: "fornecedor_id")
+}
+
+model vendas {
+  id             Int          @id @default(autoincrement()) @db.UnsignedInt
+  produto_id     Int          @db.UnsignedInt
+  cliente_id     Int          @db.UnsignedInt
+  funcionario_id Int          @db.UnsignedInt
+  clientes       clientes     @relation(fields: [cliente_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendas_ibfk_1")
+  funcionarios   funcionarios @relation(fields: [funcionario_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendas_ibfk_2")
+  produtos       produtos     @relation(fields: [produto_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "vendas_ibfk_3")
+
+  @@index([cliente_id], map: "cliente_id")
+  @@index([funcionario_id], map: "funcionario_id")
+  @@index([produto_id], map: "produto_id")
+}
