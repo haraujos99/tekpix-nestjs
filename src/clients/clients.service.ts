@@ -3,17 +3,23 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoriesDto } from './dto/categories.create.dto';
-import { UpdateCategoriesDto } from './dto/categories.update.dto';
+import { CreateClientsDto } from './dto/clients.create.dto';
+import { UpdateClientsDto } from './dto/clients.update.dto';
 import { DataBaseService } from 'src/database/database.service';
 
 @Injectable()
-export class CategoriesService {
+export class ClientsService {
   constructor(private db: DataBaseService) {}
 
-  validate(data: CreateCategoriesDto) {
+  validate(data: CreateClientsDto) {
     if (!data.nome) {
-      throw new BadRequestException('Informe o nome da categoria.');
+      throw new BadRequestException('Informe o nome do cliente.');
+    }
+    if (!data.cpf) {
+      throw new BadRequestException('Informe o CPF do cliente.');
+    }
+    if (data.cpf.length != 11) {
+      throw new BadRequestException('CPF inválido');
     }
 
     return data;
@@ -29,29 +35,29 @@ export class CategoriesService {
     return id;
   }
 
-  async create(data: CreateCategoriesDto) {
+  async create(data: CreateClientsDto) {
     this.validate(data);
 
-    return await this.db.categorias.create({
+    return await this.db.clientes.create({
       data,
     });
   }
 
   async read() {
-    return await this.db.categorias.findMany();
+    return await this.db.clientes.findMany();
   }
 
   async findOne(id: number) {
-    const category = await this.db.categorias.findUnique({ where: { id } });
+    const client = await this.db.clientes.findUnique({ where: { id } });
 
-    if (!category) {
-      throw new NotFoundException('Categoria não existe.');
+    if (!client) {
+      throw new NotFoundException('Cliente não existe.');
     }
 
-    return category;
+    return client;
   }
 
-  update(id: number, data: UpdateCategoriesDto) {
+  update(id: number, data: UpdateClientsDto) {
     this.validate(data);
 
     return this.db.categorias.update({

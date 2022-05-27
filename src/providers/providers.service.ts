@@ -3,17 +3,17 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCategoriesDto } from './dto/categories.create.dto';
-import { UpdateCategoriesDto } from './dto/categories.update.dto';
+import { CreateProvidersDto } from './dto/providers.create.dto';
+import { UpdateProvidersDto } from './dto/providers.update.dto';
 import { DataBaseService } from 'src/database/database.service';
 
 @Injectable()
-export class CategoriesService {
+export class ProvidersService {
   constructor(private db: DataBaseService) {}
 
-  validate(data: CreateCategoriesDto) {
+  validate(data: CreateProvidersDto) {
     if (!data.nome) {
-      throw new BadRequestException('Informe o nome da categoria.');
+      throw new BadRequestException('Informe o nome do fornercedor.');
     }
 
     return data;
@@ -29,7 +29,7 @@ export class CategoriesService {
     return id;
   }
 
-  async create(data: CreateCategoriesDto) {
+  async create(data: CreateProvidersDto) {
     this.validate(data);
 
     return await this.db.categorias.create({
@@ -38,23 +38,23 @@ export class CategoriesService {
   }
 
   async read() {
-    return await this.db.categorias.findMany();
+    return await this.db.fornecedores.findMany();
   }
 
   async findOne(id: number) {
-    const category = await this.db.categorias.findUnique({ where: { id } });
+    const provider = await this.db.fornecedores.findUnique({ where: { id } });
 
-    if (!category) {
+    if (!provider) {
       throw new NotFoundException('Categoria não existe.');
     }
 
-    return category;
+    return provider;
   }
 
-  update(id: number, data: UpdateCategoriesDto) {
+  update(id: number, data: UpdateProvidersDto) {
     this.validate(data);
 
-    return this.db.categorias.update({
+    return this.db.fornecedores.update({
       where: {
         id: this.getId(id),
       },
@@ -65,7 +65,7 @@ export class CategoriesService {
   async delete(id: number) {
     await this.getId(id);
 
-    return this.db.categorias.delete({
+    return this.db.fornecedores.delete({
       where: {
         id: this.getId(id),
       },

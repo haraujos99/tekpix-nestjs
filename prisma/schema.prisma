@@ -14,11 +14,10 @@ model categorias {
 }
 
 model clientes {
-  id                 Int      @id @default(autoincrement()) @db.UnsignedInt
-  nome               String   @db.VarChar(63)
-  cpf                String   @db.Char(11)
-  data_de_nascimento DateTime @db.Date
-  vendas             vendas[]
+  id     Int      @id @default(autoincrement()) @db.UnsignedInt
+  nome   String   @db.VarChar(63)
+  cpf    String   @db.Char(11)
+  vendas vendas[]
 }
 
 model fornecedores {
@@ -28,11 +27,12 @@ model fornecedores {
 }
 
 model funcionarios {
-  id                  Int      @id @default(autoincrement()) @db.UnsignedInt
-  nome                String   @db.VarChar(63)
-  cpf                 String   @db.Char(11)
-  data_de_contratacao DateTime @db.Date
-  vendas              vendas[]
+  id     Int      @id @default(autoincrement()) @db.UnsignedInt
+  nome   String   @db.VarChar(63)
+  cpf    String   @db.Char(11)
+  email  String   @unique(map: "email") @db.VarChar(127)
+  senha  String   @db.VarChar(255)
+  vendas vendas[]
 }
 
 model produtos {

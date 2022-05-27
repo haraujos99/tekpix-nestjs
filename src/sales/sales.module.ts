@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { DatabaseModule } from 'src/database/database.module';
-import { CategoriesController } from './categories.controller';
-import { CategoriesService } from './categories.service';
+import { SalesController } from './sales.controller';
+import { SalesService } from './sales.service';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { CategoriesService } from './categories.service';
     }),
     DatabaseModule,
   ],
-  controllers: [CategoriesController],
-  providers: [CategoriesService],
+  controllers: [SalesController],
+  providers: [SalesService],
 })
-export class CategoriesModule {}
+export class SalesModule {}
